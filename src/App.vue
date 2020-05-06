@@ -1,28 +1,53 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+      <Players v-bind:players="players" v-on:del-player="deletePlayer" v-on:add-player="addPlayer()"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Players from "./views/Players";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  name:'app',
+  components:{
+    Players
+  },
+  data(){
+    return{ 
+      players: [{
+        id:1,
+        name:"Joep"
+      }]
+    }
+  },
+  methods:{
+    deletePlayer(id){
+      this.players = this.players.filter(player => player.id !== id);
+    },
+    addPlayer(newPlayer){
+      this.players.push(newPlayer);
+    }
   }
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+
+html, body {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+button{
+      font-family: inherit;
+}
+
+input{
+  font-family: inherit;
 }
 </style>
+
