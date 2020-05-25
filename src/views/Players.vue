@@ -9,15 +9,15 @@
     <!-- Players container -->
 
     <div class="player-container">
-    <AddPlayer v-on:add-player="$emit('add-player',newPlayer.id,newPlayer.name)"/>
-      <div v-bind:key="player.id" v-for="player in players">
-        <PlayerRow v-bind:player="player" v-on:del-player="$emit('del-player',player.id)"  />
+      <AddPlayer @addPlayer="addPlayer" />
+      <div v-for="player in allPlayers" :key="player.id" >
+        <PlayerRow v-bind:player="player" @deletePlayer="deletePlayer" />
       </div>
     </div>
 
     <!-- Play button -->
     <div class="play-button-container">
-      <button class="play-button">Het feest kan beginnen!</button>
+      <button class="play-button" @click="startGame">Het feest kan beginnen!</button>
     </div>
   </div>
 </template>
@@ -25,8 +25,9 @@
 
 
 <script>
+import { mapGetters } from 'vuex';
 import PlayerRow from "../components/PlayerRow";
-import AddPlayer  from "../components/AddPlayer";
+import AddPlayer from "../components/AddPlayer";
 
 export default {
   name: "Players",
@@ -34,7 +35,37 @@ export default {
     PlayerRow,
     AddPlayer
   },
-  props: ["players"]
+  computed: mapGetters(['allPlayers']),
+  methods: {
+
+    addPlayer(player) {
+      var name = player.name.toLowerCase();
+       if(name.includes("joep"))
+       {
+         player.special = true;
+       }
+       this.$store.commit('addPlayer',player);
+    },
+
+    deletePlayer(id)
+    {
+      this.$store.commit('deletePlayer',id);
+    },
+
+    startGame(){
+      if(this.allPlayers.length < 3)
+      {
+        alert("Je hebt minimaal 3 spelers nodig!");
+        return;
+      }
+      else{
+        // change view to game view
+        this.$router.push({ name: 'Games'});
+        return;
+      }
+
+    }
+  }
 };
 </script>
 

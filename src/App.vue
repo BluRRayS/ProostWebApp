@@ -1,33 +1,13 @@
 <template>
   <div id="app">
-      <Players v-bind:players="players" v-on:del-player="deletePlayer" v-on:add-player="addPlayer()"/>
+      <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Players from "./views/Players";
 
 export default {
-  name:'app',
-  components:{
-    Players
-  },
-  data(){
-    return{ 
-      players: [{
-        id:1,
-        name:"Joep"
-      }]
-    }
-  },
-  methods:{
-    deletePlayer(id){
-      this.players = this.players.filter(player => player.id !== id);
-    },
-    addPlayer(newPlayer){
-      this.players.push(newPlayer);
-    }
-  }
+  name:'app'
 }
 </script>
 

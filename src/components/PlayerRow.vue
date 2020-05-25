@@ -1,14 +1,15 @@
 <template>
       <div class="form-row">
-       <p class="player-name" >{{player.name}}</p>
-        <button @click="$emit('del-player',player.id)" class="player-remove-button">X</button>
+       <p v-bind:class="{'special':player.special}" class="player-name" >{{player.name}}</p>
+        <button @click="$emit('deletePlayer',player.id)" class="player-remove-button">X</button>
       </div>
 </template>
 
 <script>
 export default {
     name:"PlayerRow",
-    props:["player"]
+    props:["player"],
+    
 }
 </script>
 
@@ -34,6 +35,10 @@ export default {
   font-weight: 400;
   padding: 0px;
   transition: 0.5s ease-in-out;
+}
+
+.player-remove-button:hover{
+  transform: scale(1.1);
 }
 
 .special{

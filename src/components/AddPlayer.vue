@@ -15,28 +15,28 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "AddPlayer",
   data() {
     return {
-      name: "",
-        }
-    },
-    methods: {
-        addPlayer(e) {
-            e.preventDefault();
-            const newPlayer = {
-            id: uuidv4(),
-            name: this.name
-          };
+      name: ""
+    };
+  },
+  methods: {
+    addPlayer(e) {
+      e.preventDefault();
+      const newPlayer = {
+        id: uuidv4(),
+        name: this.name,
+        special: false
+      };
 
-          this.$emit("add-player", newPlayer);
-          this.name="";
-        }
-      }
-  
+      this.$emit("addPlayer", newPlayer);
+      this.name = "";
+    }
+  }
 };
 </script>
 
@@ -68,6 +68,10 @@ export default {
   font-weight: 400;
   padding: 0px;
   transition: 0.5s ease-in-out;
+}
+
+.player-add-button:hover{
+  transform: scale(1.1);
 }
 
 .player-add-button:hover {

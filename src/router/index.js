@@ -1,28 +1,34 @@
-// import Vue from 'vue'
-// import VueRouter from 'vue-router'
-// import Players from '../views/Players.vue'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import Players from '../views/Players.vue'
+import Games from '../views/Games.vue'
 
-// Vue.use(VueRouter)
+Vue.use(VueRouter)
 
-//   const routes = [
-//   {
-//     path: '/',
-//     name: 'Players',
-//     component: Players
-//   }
-//   // {
-//   //   path: '/about',
-//   //   name: 'About',
-//   //   // route level code-splitting
-//   //   // this generates a separate chunk (about.[hash].js) for this route
-//   //   // which is lazy-loaded when the route is visited.
-//   //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-//   // }
-// ]
+  const routes = [
+  {
+    path: '/',
+    name: 'Players',
+    component: Players
+  },
+  {
+    path: '/games',
+    name: 'Games',
+    component: Games
+  }
+  // {
+  //   path: '/about',
+  //   name: 'About',
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  // }
+]
 
-// const router = new VueRouter({
-//   mode: 'history',
-//   routes
-// })
+const router = new VueRouter({
+  mode: 'history',
+  routes
+})
 
-// export default router
+export default router
