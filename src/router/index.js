@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Players from '../views/Players.vue'
 import Games from '../views/Games.vue'
+import PiccoloGame from '../views/PiccoloGame.vue'
+import players from '../store/Modules/players'
 
 Vue.use(VueRouter)
 
@@ -15,20 +17,29 @@ Vue.use(VueRouter)
     path: '/games',
     name: 'Games',
     component: Games
+  },
+  {
+    path: "/DrunkenPirates",
+    name: "DrunkenPirates",
+    component: PiccoloGame,
+    beforeEnter: checkPlayers
   }
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
 ]
+
+
 
 const router = new VueRouter({
   mode: 'history',
   routes
 })
+
+
+function checkPlayers (to, from, next) {
+  if (!players.getters.allPlayers.length < 3) { /// THIS NOT WORK, HOW TO ACCESS STORE?
+    router.push({name: 'Players'});
+  } else {
+    next()
+  }
+}
 
 export default router

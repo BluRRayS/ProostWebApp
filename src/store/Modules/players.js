@@ -9,6 +9,11 @@ const state = {
             id:2,
             name:"Stijn",
             special: false
+        },
+        {
+            id:3,
+            name: "Jeroen",
+            special: false
         }
     ]
 };

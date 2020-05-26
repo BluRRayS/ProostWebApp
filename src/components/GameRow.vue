@@ -1,9 +1,9 @@
 <template>
-  <div class="form-row">
-    <img src="../assets/logonobackground.png" alt="gameImg">
+  <div class="form-row" @click="$emit('gameClick',game.id)">
+    <img class="gameImage" v-bind:src="require(`@/assets/${game.imagePath}`)" alt="gameImg">
     <div>
-      <h6>Gamename</h6>
-      <p>Game description hahaha funnny poo!</p>
+      <h3>{{game.name}}</h3>
+      <p>{{game.description}}</p>
     </div>
   </div>
 </template>
@@ -12,9 +12,17 @@
 
 export default {
   name: "GameRow",
-//   props: ["game"]
+  props: ["game"]
 };
 </script>
 
 <style scoped>
+  .gameImage{
+    width: 20vw;
+    max-width: 100px;
+    height: auto;
+    border-radius: 50%;
+    margin-right: 1em;
+
+  }
 </style>

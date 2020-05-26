@@ -9,7 +9,6 @@
 export default {
     name:"PlayerRow",
     props:["player"],
-    
 }
 </script>
 

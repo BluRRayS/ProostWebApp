@@ -1,37 +1,46 @@
 <template>
   <div class="main-container">
-
     <!-- Title and banner -->
     <div class="title-container">
-
-        <button @click="back" class="back-button grow">terug</button>
+      <button @click="back" class="back-button">
+        <v-icon name="arrow-left"></v-icon>
+      </button>
       <h1 class="title-header">Kies een spel!</h1>
-      <div class="grow"></div>
     </div>
 
     <!-- Games container -->
     <div class="game-container">
-        <GameRow></GameRow>
+      <div  v-for="game in allGames" :key="game.id">
+        <GameRow @gameClick="gameClick" v-bind:game="game"></GameRow>
+      </div>
     </div>
-
-
   </div>
 </template>
 
 
 <script>
- import GameRow from '../components/GameRow';
+import { mapGetters } from "vuex";
+import GameRow from "../components/GameRow";
 
 export default {
   name: "Games",
   components: {
-      GameRow
+    GameRow
   },
-  methods:{
-      back(){
-          // Change view to player view
-          this.$router.push({name: 'Players'})
+  computed: mapGetters(["allGames","gameById"]),
+  methods: {
+    back() {
+      // Change view to player view
+      this.$router.push({ name: "Players" });
+    },
+
+    gameClick(id){
+      var game = this.gameById(id);
+      if(!game.locked)
+      {
+        this.$router.push({ name: "DrunkenPirates" })
       }
+    }
   }
 };
 </script>
@@ -48,19 +57,20 @@ export default {
 .title-container {
   display: flex;
   align-items: center;
-  justify-content: space-evenly
+  justify-content: space-evenly;
+  width: 100%;
+  max-width: 650px;
 }
 
 .title-header {
   color: var(--colorPrimary);
   text-align: center;
-  margin-left: 2em;
+  width: 100%;
+  margin-left: -35px;
 }
-
 
 .form-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background-color: var(--colorPrimaryDark);
   border-radius: 1em;
@@ -77,9 +87,10 @@ export default {
   height: 50px;
   text-align: center;
   border: none;
+  z-index: 10;
 }
 
-.game-container{
+.game-container {
   padding: 1em;
   border-radius: 1em;
   background-color: var(--colorPrimary);
