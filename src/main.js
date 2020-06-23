@@ -5,6 +5,7 @@ import store from './store'
 import feather from 'vue-icon'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import './registerServiceWorker'
 
 Vue.use(feather, 'v-icon')
 
