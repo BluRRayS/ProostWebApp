@@ -83,6 +83,8 @@ export default {
     }
   },
   created() {
+    questionsAmount = 0;
+
     db.collection("piccolo")
       .doc("orders")
       .get()
@@ -198,7 +200,7 @@ function prepareInteraction(interaction){
   position: fixed;
   width: 100%;
   background-color: #232323;
-  height: 5px;
+  height: 10px;
   bottom: 0px;
 }
 

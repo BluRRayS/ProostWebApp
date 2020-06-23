@@ -88,6 +88,7 @@ export default {
   text-align: center;
   border: none;
   z-index: 10;
+  margin-left: 1em;
 }
 
 .game-container {
