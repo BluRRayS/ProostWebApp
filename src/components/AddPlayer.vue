@@ -7,6 +7,7 @@
         autofocus="true"
         maxlength="12"
         placeholder="Speler naam"
+        required
         v-model="name"
       />
       <input type="submit" value="+" class="player-add-button" />
@@ -27,14 +28,16 @@ export default {
   methods: {
     addPlayer(e) {
       e.preventDefault();
-      const newPlayer = {
-        id: uuidv4(),
-        name: this.name,
-        special: false
-      };
+     
+        const newPlayer = {
+          id: uuidv4(),
+          name: this.name,
+          special: false
+        };
 
-      this.$emit("addPlayer", newPlayer);
-      this.name = "";
+        this.$emit("addPlayer", newPlayer);
+        this.name = "";
+      
     }
   }
 };
@@ -70,7 +73,7 @@ export default {
   transition: 0.5s ease-in-out;
 }
 
-.player-add-button:hover{
+.player-add-button:hover {
   transform: scale(1.1);
 }
 

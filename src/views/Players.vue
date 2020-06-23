@@ -55,7 +55,7 @@ export default {
     startGame(){
       if(this.allPlayers.length < 3)
       {
-        alert("Je hebt minimaal 3 spelers nodig!");
+        this.$swal('Je hebt minimaal 3 spelers nodig!');
         return;
       }
       else{

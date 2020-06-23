@@ -35,7 +35,7 @@ const router = new VueRouter({
 
 
 function checkPlayers (to, from, next) {
-  if (!players.getters.allPlayers.length < 3) { /// THIS NOT WORK, HOW TO ACCESS STORE?
+  if (players.state.players.length < 3) { 
     router.push({name: 'Players'});
   } else {
     next()

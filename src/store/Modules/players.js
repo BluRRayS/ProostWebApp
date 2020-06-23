@@ -1,26 +1,30 @@
 const state = {
     players : [
-        {
-            id:1,
-            name:"Joep",
-            special: true
-        },
-        {
-            id:2,
-            name:"Stijn",
-            special: false
-        },
-        {
-            id:3,
-            name: "Jeroen",
-            special: false
-        }
+        // {
+        //     id:1,
+        //     name:"Joep",
+        //     special: true
+        // },
+        // {
+        //     id:2,
+        //     name:"Stijn",
+        //     special: false
+        // },
+        // {
+        //     id:3,
+        //     name: "Jeroen",
+        //     special: false
+        // }
     ]
 };
 
 const getters = {
-    allPlayers: (state) => state.players
+    allPlayers: (state) =>  {
+        return state.players
+    }
 };
+
+
 
 const actions = { };
 
