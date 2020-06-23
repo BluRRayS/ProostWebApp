@@ -28,19 +28,42 @@ export default {
   methods: {
     addPlayer(e) {
       e.preventDefault();
-     
-        const newPlayer = {
-          id: uuidv4(),
-          name: this.name,
-          special: false
-        };
 
-        this.$emit("addPlayer", newPlayer);
-        this.name = "";
-      
+      this.name = checkSpecialNames(this.name);
+
+      const newPlayer = {
+        id: uuidv4(),
+        name: this.name,
+        special: false
+      };
+
+      this.$emit("addPlayer", newPlayer);
+      this.name = "";
     }
   }
 };
+
+function checkSpecialNames(name) {
+  var checkname = name.toLowerCase();
+  if (checkname == "joep") {
+    name+= "🤓"
+  } else if (checkname == "bjorn" || checkname == "björn") {
+    name += "🐻";
+  } else if (checkname == "jeroen") {
+    name += "🍺";
+  } else if (checkname == "stijn") {
+    name += "🦀";
+  } else if (checkname == "jan") {
+    name += "🍕";
+  } else if (checkname == "nikky") {
+    name += "🐣";
+  } else if (checkname == "elise") {
+    name += "😎";
+  } else if (checkname == "chelsey") {
+    name += "💕";
+  }
+  return name;
+}
 </script>
 
 <style scoped>

@@ -157,8 +157,15 @@ function prepareOrder(order){
 
 function prepareInteraction(interaction){
   console.log(store);
-  interaction = interaction.replace("[pl1]",store.state.players[0].name);
-  interaction = interaction.replace("[pl2]",store.state.players[1].name);
+  var player1 = store.state.players[random(0,store.state.players.length)].name;
+  var player2 = store.state.players[random(0,store.state.players.length)].name;
+  while(player2 == player1)
+  {
+    player2 = store.state.players[random(0,store.state.players.length)].name;
+  }
+
+  interaction = interaction.replace("[pl1]",player1);
+  interaction = interaction.replace("[pl2]",player2);
   return interaction;
 }
 
@@ -180,10 +187,11 @@ function prepareInteraction(interaction){
 
 .game-text{
   color: white;
-  width: 100%;
   display: flex;
   justify-content: center;
   text-align:center;
+  padding-left: 1em;
+  padding-right:1em;
 }
 
 .progressbar {
