@@ -4,6 +4,7 @@ import Players from '../views/Players.vue'
 import Games from '../views/Games.vue'
 import PiccoloGame from '../views/PiccoloGame.vue'
 import players from '../store/Modules/players'
+import Half4Game from '../views/Half4Game.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,12 @@ Vue.use(VueRouter)
     path: "/DrunkenPirates",
     name: "DrunkenPirates",
     component: PiccoloGame,
+    beforeEnter: checkPlayers
+  },
+  {
+    path:"/Half4",
+    name:"Half4",
+    component: Half4Game,
     beforeEnter: checkPlayers
   }
 ]

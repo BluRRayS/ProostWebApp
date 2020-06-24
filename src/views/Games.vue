@@ -10,7 +10,7 @@
 
     <!-- Games container -->
     <div class="game-container">
-      <div  v-for="game in allGames" :key="game.id">
+      <div v-for="game in allGames" :key="game.id">
         <GameRow @gameClick="gameClick" v-bind:game="game"></GameRow>
       </div>
     </div>
@@ -27,22 +27,49 @@ export default {
   components: {
     GameRow
   },
-  computed: mapGetters(["allGames","gameById"]),
+  computed: mapGetters(["allGames", "gameById"]),
   methods: {
     back() {
       // Change view to player view
       this.$router.push({ name: "Players" });
     },
 
-    gameClick(id){
+    gameClick(id) {
       var game = this.gameById(id);
-      if(!game.locked)
-      {
-        this.$router.push({ name: "DrunkenPirates" })
+      if (!game.locked) {
+        if (game.id == 2) {
+            if(checkTimeHalf4()){
+              this.$router.push({ name: game.route });
+            }
+            else{
+              this.$swal('Je kunt dit spel pas vanaf 03:30 spelen!');
+            }
+        } else {
+          this.$router.push({ name: game.route });
+        }
       }
     }
   }
 };
+
+function checkTimeHalf4() {
+  var startTime = "03:30:00";
+  var endTime = "08:00:00";
+
+  var currentDate = new Date();
+
+  var startDate = new Date(currentDate.getTime());
+  startDate.setHours(startTime.split(":")[0]);
+  startDate.setMinutes(startTime.split(":")[1]);
+  startDate.setSeconds(startTime.split(":")[2]);
+
+  var endDate = new Date(currentDate.getTime());
+  endDate.setHours(endTime.split(":")[0]);
+  endDate.setMinutes(endTime.split(":")[1]);
+  endDate.setSeconds(endTime.split(":")[2]);
+  var valid = startDate < currentDate && endDate > currentDate;
+  return valid;
+}
 </script>
 
 <style scoped>

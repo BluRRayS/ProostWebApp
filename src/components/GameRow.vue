@@ -20,9 +20,9 @@ export default {
   .gameImage{
     width: 20vw;
     max-width: 100px;
-    height: auto;
+    height: 20vw;
+    max-height: 100px;
     border-radius: 50%;
     margin-right: 1em;
-
   }
 </style>
