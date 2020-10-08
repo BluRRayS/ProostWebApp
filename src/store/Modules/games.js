@@ -11,8 +11,8 @@ const state = {
         {
             id:2,
             name:"Half 4tje",
-            description:"Wanneer het al zo laat is en het niveau toch al zo diep gezonken, dan is het tijd om elkaar filosofische vragen te stellen.",
-            imagePath:"placeholderblue.png",
+            description:"Wanneer het al zo laat is en het niveau toch al zo diep gezonken is, dan is het tijd om elkaar filosofische vragen te stellen.",
+            imagePath:"clock.png",
             route: "Half4",
             locked: false
         },
