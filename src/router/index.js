@@ -5,48 +5,53 @@ import Games from '../views/Games.vue'
 import PiccoloGame from '../views/PiccoloGame.vue'
 import players from '../store/Modules/players'
 import Half4Game from '../views/Half4Game.vue'
+import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
 
-  const routes = [
-  {
-    path: '/',
-    name: 'Players',
-    component: Players
-  },
-  {
-    path: '/games',
-    name: 'Games',
-    component: Games
-  },
-  {
-    path: "/DrunkenPirates",
-    name: "DrunkenPirates",
-    component: PiccoloGame,
-    beforeEnter: checkPlayers
-  },
-  {
-    path:"/Half4",
-    name:"Half4",
-    component: Half4Game,
-    beforeEnter: checkPlayers
-  }
+const routes = [{
+        path: '/Login',
+        name: 'Login',
+        component: Login
+    },
+    {
+        path: '/',
+        name: 'Players',
+        component: Players
+    },
+    {
+        path: '/games',
+        name: 'Games',
+        component: Games
+    },
+    {
+        path: "/DrunkenPirates",
+        name: "DrunkenPirates",
+        component: PiccoloGame,
+        beforeEnter: checkPlayers
+    },
+    {
+        path: "/Half4",
+        name: "Half4",
+        component: Half4Game,
+        beforeEnter: checkPlayers
+    }
 ]
 
 
 
 const router = new VueRouter({
-  mode: 'history',
-  routes
+    mode: 'history',
+    routes
 })
 
 
-function checkPlayers (to, from, next) {
-  if (players.state.players.length < 3) { 
-    router.push({name: 'Players'});
-  } else {
-    next()
-  }
+function checkPlayers(to, from, next) {
+    if (players.state.players.length < 3) {
+        router.push({ name: 'Players' });
+    } else {
+        next()
+    }
 }
 
 export default router

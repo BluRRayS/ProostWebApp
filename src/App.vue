@@ -1,36 +1,34 @@
 <template>
-  <div id="app">
-    <transition  name="view">
-      <router-view></router-view>
-    </transition>
-  </div>
+  <router-view></router-view>
+  <!-- <transition name="view">
+  
+  </transition> -->
 </template>
 
 <script>
-
 export default {
-  name:'app'
-}
+  name: "app",
+};
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
 
-
-html, body {
-  font-family: 'Roboto Condensed', sans-serif;
+html,
+body {
+  display: block;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: rgb(0, 245, 255);
+    background: linear-gradient( 45deg, rgba(0, 245, 255, 1) 0%, rgba(151, 86, 235, 1) 53%, rgba(228, 58, 247, 1) 100%);
 }
 
-
-#app {
-  font-family: 'Roboto Condensed', sans-serif;
+button {
+  font-family: inherit;
 }
 
-button{
-      font-family: inherit;
-}
-
-input{
+input {
   font-family: inherit;
 }
 
@@ -51,6 +49,5 @@ view-enter-active,
   opacity: 1;
   transform: translateX(0px);
 }
-
 </style>
 

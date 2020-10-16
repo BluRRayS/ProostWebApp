@@ -8,8 +8,7 @@ module.exports = {
         appleMobileWebAppStatusBarStyle: 'black',
         manifestOptions: {
             description: "Het drank spelletje dat je avond een leuke en gekke twist geeft.",
-            icons: [
-                {
+            icons: [{
                     "src": "./img/icons/android-chrome-192x192.png",
                     "sizes": "192x192",
                     "type": "image/png"
@@ -36,7 +35,13 @@ module.exports = {
             importWorkboxFrom: 'local',
             navigateFallback: 'shell.html',
             navigateFallbackWhitelist: [/^((?!\/404).)*$/],
-            // … other Workbox options …
         },
     },
+    css: {
+        loaderOptions: {
+            sass: {
+                additionalData: `@import "@/styles/base.scss";`
+            }
+        }
+    }
 };
