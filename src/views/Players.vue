@@ -19,12 +19,15 @@
     <div class="play-button-container">
       <button class="play-button" @click="startGame">Het feest kan beginnen!</button>
     </div>
+
+    <v-btn @click="signOut">Sign out</v-btn>
   </div>
 </template>
 
 
 
 <script>
+import firebase from 'firebase';
 import { mapGetters } from 'vuex';
 import PlayerRow from "../components/PlayerRow";
 import AddPlayer from "../components/AddPlayer";
@@ -38,6 +41,18 @@ export default {
   computed: mapGetters(['allPlayers']),
   methods: {
 
+    signOut()
+    {
+      firebase.auth()
+      .signOut()
+      .then( () =>{
+        this.$router.push('login');
+      })
+      .catch((err) => {
+        console.error(err);
+        // Todo sent notification to User.
+      });
+    },
     addPlayer(player) {
       var name = player.name.toLowerCase();
        if(name.includes("joep"))

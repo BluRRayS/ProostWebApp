@@ -9,7 +9,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import db from "../components/firebaseInit";
+import firebase from "firebase";
 import store from '../store/Modules/players'
 
 const colors = [
@@ -85,7 +85,7 @@ export default {
   created() {
     questionsAmount = 0;
 
-    db.collection("piccolo")
+    firebase.database.collection("piccolo")
       .doc("orders")
       .get()
       .then(querySnapshot => {
@@ -96,7 +96,7 @@ export default {
          questionsAmount+= this.piccolo.orders.length
       });
 
-    db.collection("piccolo")
+    firebase.database.collection("piccolo")
       .doc("opinions")
       .get()
       .then(querySnapshot => {
@@ -107,7 +107,7 @@ export default {
          questionsAmount+= this.piccolo.opinions.length
       });
 
-    db.collection("piccolo")
+    firebase.database.collection("piccolo")
       .doc("interactions")
       .get()
       .then(querySnapshot => {

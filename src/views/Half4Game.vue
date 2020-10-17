@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import db from "../components/firebaseInit";
+import firebase from "firebase";
 
 export default {
   name: "Half4Game",
@@ -47,7 +47,7 @@ export default {
     };
   },
   created() {
-    db.collection("half4")
+    firebase.database.collection("half4")
       .doc("gamedata")
       .get()
       .then(querySnapshot => {

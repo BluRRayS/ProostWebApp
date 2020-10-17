@@ -2,14 +2,35 @@
   <div class="login">
     <div class="login-panel">
       <h1>Login</h1>
-      <form class="login-form">
-        <label for="email">Email</label>
-        <input class="login-input" id="email" type="email" />
-        <label for="password">Wachtwoord</label>
-        <input class="login-input" id="password" type="text" />
-        <a href="#" class="login-form-forgot">Wachtwoord vergeten?</a>
-        <button class="login-button">Login</button>
-        <button class="login-panel-no-account-button">
+      <form class="login-form" @submit.prevent="login">
+        <v-text-field
+          label="Email"
+          prepend-inner-icon="mdi-email"
+          type="email"
+          v-model="email"
+          autofocus
+          :rules="emailRules"
+        ></v-text-field>
+        <v-text-field
+          label="Wachtwoord"
+          prepend-inner-icon="mdi-lock"
+          :type="showPassword ? 'text' : 'password'"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="showPassword = !showPassword"
+          v-model="password"
+        ></v-text-field>
+
+        <router-link to="forgotPassword" class="login-form-forgot"
+          >Wachtwoord vergeten?</router-link
+        >
+        <button v-ripple type="submit" class="login-button">Login</button>
+
+        <button
+          v-ripple
+          class="login-panel-no-account-button"
+          type="button"
+          @click="loginWithoutAccount"
+        >
           Gebruik Proost! zonder account
         </button>
       </form>
@@ -17,19 +38,82 @@
       <p>Of login via</p>
       <div class="login-panel-other-methods-wrapper">
         <img
+          v-ripple
+          @click="loginWithGoogle"
           src="@/assets/google.png"
           alt="google"
           class="login-panel-other-method-img"
         />
       </div>
-      <a href="#">Nieuw account aanmaken</a>
+      <router-link to="register">Nieuw account aanmaken</router-link>
     </div>
   </div>
 </template>
 
 <script>
+import firebase from "firebase";
+
 export default {
   name: "Login",
+  data() {
+    return {
+      email: "",
+      password: "",
+      showPassword: false,
+      emailRules: [
+        (v) => !!v || "Email is verplicht!",
+        (v) => /.+@.+/.test(v) || "Vul een geldig email adres in!",
+      ],
+    };
+  },
+  methods: {
+    login() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then((res) => {
+          console.log(res);
+          firebase
+            .auth()
+            .currentUser.sendEmailVerification()
+            .then(() => {
+              console.log("sent an email to " + this.email);
+              this.$router.replace("players");
+            })
+            .catch((err) => {
+              console.error(err);
+              //Todo send notification to user.
+            });
+        })
+        .catch((error) => {
+          console.error(error);
+          // Todo send notification to user.
+        });
+    },
+    loginWithGoogle() {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+      firebase.auth().useDeviceLanguage();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(() => {
+          this.$router.push("players");
+        })
+        .catch((err) => {
+          console.error(err);
+          // Send notification to user.
+        });
+    },
+    loginWithoutAccount() {
+      firebase
+        .auth()
+        .signInAnonymously()
+        .then(() => {
+          this.$router.push("players");
+        });
+    },
+  },
 };
 </script>
 
@@ -90,13 +174,6 @@ export default {
       font-family: "Open Sans", sans-serif;
       margin-bottom: 0.8em;
 
-      .login-input {
-        margin-bottom: 2em;
-        border: none;
-        border-bottom: 1px solid gray;
-        outline: none;
-      }
-
       .login-form-forgot {
         text-align: right;
       }
@@ -138,6 +215,10 @@ export default {
       font-weight: bold;
       font-family: "Heebo", sans-serif;
       margin-bottom: 2.5em;
+      transition: all 0.5s;
+      &:hover {
+        background-color: rgba(103, 103, 103, 0.1);
+      }
     }
 
     .login-panel-other-methods-wrapper {
@@ -146,8 +227,13 @@ export default {
       margin-bottom: 2em;
       justify-content: center;
       .login-panel-other-method-img {
+        transition: 0.5s all;
         width: 60px;
         height: 60px;
+        cursor: pointer;
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
   }
