@@ -5,7 +5,7 @@
       <div v-if="gameReady" style="display: flex; flex-direction:column; align-items:center">
 
         <h1 id="game-text" class="game-text">{{questions[count]}}</h1>
-        <button class="next-btn" @click="nextItem">volgende</button>
+        <v-btn rounded outlined dark  @click="nextItem">volgende</v-btn>
       </div>
     </div>
 
@@ -35,7 +35,7 @@ export default {
     nextItem: function() {
       this.count++;
       if (this.count >= this.questions.length) {
-        this.$router.push({ name: "Players" });
+        this.$router.push({ name: "games" });
       }
     }
   },
@@ -43,11 +43,13 @@ export default {
     return {
       gameReady: false,
       questions: [],
-      count: 0
+      count: 0,
+      db: null
     };
   },
   created() {
-    firebase.database.collection("half4")
+    this.db = firebase.firestore();
+    this.db.collection("half4")
       .doc("gamedata")
       .get()
       .then(querySnapshot => {

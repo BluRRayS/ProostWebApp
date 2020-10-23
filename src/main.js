@@ -11,13 +11,13 @@ import * as firebase from 'firebase';
 
 
 const options = {
-  confirmButtonColor: '#9A21F7',
+  confirmButtonColor: '#3F51B5',
   cancelButtonColor: '#ff7674',
 };
 
 Vue.use(feather, 'v-icon');
 
-Vue.use(VueSweetalert2,options);
+Vue.use(VueSweetalert2, options);
 
 Vue.config.productionTip = false;
 
@@ -33,9 +33,19 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig)
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
-}).$mount('#app')
+
+const unsubscribe = firebase.auth()
+  .onAuthStateChanged((firebaseUser) => {
+    new Vue({
+      router,
+      store,
+      vuetify,
+      render: h => h(App),
+      created() {
+        if (firebaseUser) {
+          store.dispatch('user/autoSignIn', firebaseUser)
+        }
+      }
+    }).$mount('#app')
+    unsubscribe()
+  });

@@ -1,23 +1,33 @@
 <template>
   <div class="login">
     <div class="login-panel">
-      <h1>Login</h1>
-      <form class="login-form" @submit.prevent="login">
+      <h1>Proost!</h1>
+      <h2>Login</h2>
+      <v-form
+        class="login-form"
+        @submit.prevent="login"
+        v-model="valid"
+        lazy-validation
+        ref="loginForm"
+      >
         <v-text-field
+          v-model="email"
+          :rules="[required('email'), emailFormat()]"
           label="Email"
           prepend-inner-icon="mdi-email"
           type="email"
-          v-model="email"
           autofocus
-          :rules="emailRules"
+          required
         ></v-text-field>
         <v-text-field
+          v-model="password"
+          :rules="[required('wachtwoord')]"
+          required
           label="Wachtwoord"
           prepend-inner-icon="mdi-lock"
           :type="showPassword ? 'text' : 'password'"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="showPassword = !showPassword"
-          v-model="password"
         ></v-text-field>
 
         <router-link to="forgotPassword" class="login-form-forgot"
@@ -33,7 +43,7 @@
         >
           Gebruik Proost! zonder account
         </button>
-      </form>
+      </v-form>
 
       <p>Of login via</p>
       <div class="login-panel-other-methods-wrapper">
@@ -51,45 +61,56 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import firebase from "firebase";
+import validation from "@/utils/validation";
 
 export default {
   name: "Login",
   data() {
     return {
+      valid: true,
       email: "",
       password: "",
       showPassword: false,
-      emailRules: [
-        (v) => !!v || "Email is verplicht!",
-        (v) => /.+@.+/.test(v) || "Vul een geldig email adres in!",
-      ],
+      ...validation,
     };
   },
   methods: {
+    ...mapActions({
+      setUser: "user/setUser",
+      setIsAuthenticated: "user/setIsAuthenticated",
+      showSnackbar: "snackbars/setSnackbar",
+    }),
+
     login() {
+      this.$refs.loginForm.validate();
+      if (!this.valid) return;
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then((res) => {
-          console.log(res);
-          firebase
-            .auth()
-            .currentUser.sendEmailVerification()
-            .then(() => {
-              console.log("sent an email to " + this.email);
-              this.$router.replace("players");
-            })
-            .catch((err) => {
-              console.error(err);
-              //Todo send notification to user.
-            });
+          this.showSnackbar({ text: "Succesvol ingelogd!" });
+          this.setUser(res.user);
+          this.setIsAuthenticated(true);
+          this.$router.replace("players");
         })
         .catch((error) => {
           console.error(error);
-          // Todo send notification to user.
+          if (error.code === "auth/wrong-password")
+            this.showSnackbar({
+              text: "Incorrect wachtwoord!",
+              color: "red darken-2",
+            });
+          else
+            this.showSnackbar({
+              text: "Oops! Er is een fout opgetreden probeer het opnieuw!",
+              color: "red darken-2",
+              timeout: -1,
+            });
         });
     },
+
     loginWithGoogle() {
       var provider = new firebase.auth.GoogleAuthProvider();
       provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
@@ -97,20 +118,31 @@ export default {
       firebase
         .auth()
         .signInWithPopup(provider)
-        .then(() => {
-          this.$router.push("players");
+        .then((res) => {
+          this.showSnackbar({ text: "Succesvol ingelogd!" });
+          this.setUser(res.user);
+          this.setIsAuthenticated(true);
+          this.$router.replace("players");
         })
         .catch((err) => {
           console.error(err);
-          // Send notification to user.
+          this.showSnackbar({
+            text: "Oops! Er is een fout opgetreden probeer het opnieuw!",
+            color: "red darken-2",
+            timeout: 0,
+          });
         });
     },
+
     loginWithoutAccount() {
       firebase
         .auth()
         .signInAnonymously()
-        .then(() => {
-          this.$router.push("players");
+        .then((res) => {
+          this.showSnackbar({ text: "Succesvol ingelogd!" });
+          this.setUser(res.user);
+          this.setIsAuthenticated(true);
+          this.$router.replace("players");
         });
     },
   },
@@ -118,8 +150,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@900&family=Open+Sans:wght@300&display=swap");
-
 .login {
   font-family: "Open Sans", sans-serif;
   display: flex;
@@ -148,7 +178,7 @@ export default {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 
     a {
-      text-decoration: none;
+      text-decoration: underline;
       color: #676767;
       &:hover {
         text-decoration-line: underline;

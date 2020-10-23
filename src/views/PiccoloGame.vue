@@ -42,7 +42,8 @@ export default {
         loaded: false,
         active: ""    
       },
-      index: 0
+      index: 0,
+      db: null
     };
   },
   methods: {
@@ -83,9 +84,9 @@ export default {
     }
   },
   created() {
+    this.db = firebase.firestore();
     questionsAmount = 0;
-
-    firebase.database.collection("piccolo")
+    this.db.collection("piccolo")
       .doc("orders")
       .get()
       .then(querySnapshot => {
@@ -96,7 +97,7 @@ export default {
          questionsAmount+= this.piccolo.orders.length
       });
 
-    firebase.database.collection("piccolo")
+    this.db.collection("piccolo")
       .doc("opinions")
       .get()
       .then(querySnapshot => {
@@ -107,7 +108,7 @@ export default {
          questionsAmount+= this.piccolo.opinions.length
       });
 
-    firebase.database.collection("piccolo")
+    this.db.collection("piccolo")
       .doc("interactions")
       .get()
       .then(querySnapshot => {
@@ -177,7 +178,7 @@ function prepareInteraction(interaction){
 <style scoped>
 .game {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: gray;
   color: #232323;
   display: flex;

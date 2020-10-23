@@ -7,19 +7,27 @@ import players from '../store/Modules/players';
 import Half4Game from '../views/Half4Game.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import Account from '../views/Account.vue';
 import ForgotPassword from '../views/ForgotPassword.vue'
 import firebase from 'firebase';
+import DrunkenPirates from '../views/DrunkenPirates.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
     {
         path: '/',
-        component: Login
+        component: Players,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '*',
-        component: Login
+        component: Players,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/login',
@@ -47,19 +55,45 @@ const routes = [
     {
         path: '/games',
         name: 'games',
-        component: Games
+        component: Games,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path:'/account',
+        name: 'account',
+        component: Account,
+        meta:{
+            requiresAuth: true
+        }
     },
     {
         path: "/drunkenPirates",
         name: "drunkenPirates",
+        component: DrunkenPirates,
+        beforeEnter: checkPlayers,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: "/piccolo",
+        name: "piccolo",
         component: PiccoloGame,
-        beforeEnter: checkPlayers
+        beforeEnter: checkPlayers,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: "/half4",
         name: "Half4",
         component: Half4Game,
-        beforeEnter: checkPlayers
+        beforeEnter: checkPlayers,
+         meta: {
+            requiresAuth: true
+        }
     }
 ]
 
@@ -70,11 +104,10 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const currentUser = firebase.auth().currentUser;
+    const isAuthenticated = firebase.auth().currentUser;
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-    if(requiresAuth && !currentUser) next('login');
-    else if(!requiresAuth && currentUser) next('players');
+    if(requiresAuth && !isAuthenticated) next('/login');
     else next();
 });
 

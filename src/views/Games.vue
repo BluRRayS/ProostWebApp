@@ -1,18 +1,20 @@
 <template>
-  <div class="main-container">
-    <!-- Title and banner -->
-    <div class="title-container">
-      <button @click="back" class="back-button">
-        <v-icon name="arrow-left"></v-icon>
-      </button>
-      <h1 class="title-header">Kies een spel!</h1>
-    </div>
+  <div class="panel">
+    <v-row style="margin-top: 3.5em; justify-content: space-between">
+      <h1 style="margin-top: 0; margin-left: 70px">Kies een spel!</h1>
 
-    <!-- Games container -->
-    <div class="game-container">
-      <div v-for="game in allGames" :key="game.id">
-        <GameRow @gameClick="gameClick" v-bind:game="game"></GameRow>
-      </div>
+        <GameSettings />
+
+    </v-row>
+    <span>Nu kan het feest echt beginnen.</span>
+    <div class="mt-2">
+      <GameRow
+        class=""
+        v-for="game in allGames"
+        :key="game.id"
+        @gameClick="gameClick"
+        v-bind:game="game"
+      ></GameRow>
     </div>
   </div>
 </template>
@@ -21,36 +23,47 @@
 <script>
 import { mapGetters } from "vuex";
 import GameRow from "../components/GameRow";
+import GameSettings from "../components/GameSettings";
 
 export default {
   name: "Games",
   components: {
-    GameRow
+    GameRow,
+    GameSettings,
   },
-  computed: mapGetters(["allGames", "gameById"]),
+  computed: mapGetters(["allGames", "gameById", "allPlayers"]),
   methods: {
-    back() {
-      // Change view to player view
-      this.$router.push({ name: "Players" });
-    },
-
     gameClick(id) {
       var game = this.gameById(id);
+
       if (!game.locked) {
-        if (game.id == 2) {
-            if(checkTimeHalf4()){
+        if (checkRequiredPlayers(game, this.allPlayers)) {
+          if (game.id == 2) {
+            if (checkTimeHalf4()) {
               this.$router.push({ name: game.route });
+            } else {
+              this.$swal("Je kunt dit spel pas vanaf 03:30 spelen!");
             }
-            else{
-              this.$swal('Je kunt dit spel pas vanaf 03:30 spelen!');
-            }
+          } else {
+            this.$router.push({ name: game.route });
+          }
         } else {
-          this.$router.push({ name: game.route });
+          this.$swal(
+            `Je hebt minimaal ${game.minPlayers} spelers nodig om dit spel te spelen!`
+          );
         }
       }
-    }
-  }
+    },
+  },
 };
+
+function checkRequiredPlayers(game, players) {
+  var valid = true;
+  if (players.length < game.minPlayers) {
+    valid = false;
+  }
+  return valid;
+}
 
 function checkTimeHalf4() {
   var startTime = "03:30:00";
@@ -73,59 +86,4 @@ function checkTimeHalf4() {
 </script>
 
 <style scoped>
-.main-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  max-height: 100vh;
-}
-
-.title-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 100%;
-  max-width: 650px;
-}
-
-.title-header {
-  color: var(--colorPrimary);
-  text-align: center;
-  width: 100%;
-  margin-left: -35px;
-}
-
-.form-row {
-  display: flex;
-  align-items: center;
-  background-color: var(--colorPrimaryDark);
-  border-radius: 1em;
-  padding: 0.5em;
-  margin-bottom: 0.2em;
-}
-
-.back-button {
-  background: var(--colorAccent);
-  color: white;
-  padding: 1em;
-  border-radius: 2em;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  border: none;
-  z-index: 10;
-  margin-left: 1em;
-}
-
-.game-container {
-  padding: 1em;
-  border-radius: 1em;
-  background-color: var(--colorPrimary);
-  overflow-y: auto;
-  width: 90%;
-  min-width: 280px;
-  max-width: 650px;
-  margin: 1em;
-}
 </style>

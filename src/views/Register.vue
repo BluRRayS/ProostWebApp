@@ -1,14 +1,25 @@
 <template>
   <div class="register">
     <div class="register-panel">
-      <v-form class="register-form" @submit.prevent="registerUser">
-        <h1>Registeren</h1>
+      <h1>Proost!</h1>
+      <h2>Registeren</h2>
+      <v-form
+        class="register-form"
+        @submit.prevent="registerUser"
+        v-model="valid"
+      >
         <v-text-field
           prepend-inner-icon="mdi-account"
           label="Weergave naam"
           type="text"
           hint="De naam die andere gebruikers te zien krijgen"
           v-model="name"
+          :counter="20"
+          :rules="[
+            required('weergave naam'),
+            minLength('weergave naam', 4),
+            maxLength('weergave naam', 20),
+          ]"
           required
         ></v-text-field>
         <v-text-field
@@ -16,6 +27,7 @@
           label="Email"
           type="email"
           v-model="email"
+          :rules="[emailFormat(), required('email')]"
           required
         ></v-text-field>
         <v-text-field
@@ -25,6 +37,7 @@
           :type="showPassword ? 'text' : 'password'"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="showPassword = !showPassword"
+          :rules="[required('wachtwoord'), minLength('wachtwoord', 8)]"
           required
         ></v-text-field>
         <button v-ripple type="submit" class="register-button">
@@ -41,34 +54,55 @@
 
 <script>
 import firebase from "firebase";
+import validation from "@/utils/validation";
 
 export default {
   name: "register",
   data() {
     return {
+      valid: false,
       showPassword: "",
       name: "",
       email: "",
       password: "",
+      ...validation,
     };
   },
+
   methods: {
     registerUser() {
+      if (!this.valid) return;
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
-        .then((res) => {
-          res.user
+        .then(() => {
+          const user = firebase.auth().currentUser;
+          user.sendEmailVerification();
+          user
             .updateProfile({
               displayName: this.name,
             })
             .then(() => {
+              this.$store.dispatch("snackbars/setSnackbar", {
+                text: "Je account is aangemaakt!",
+              });
               this.$router.push("/login");
             });
         })
         .catch((error) => {
           console.error(error);
-          // Todo show notification to user.
+          if (error.code === "auth/email-already-in-use") {
+            this.$store.dispatch("snackbars/setSnackbar", {
+              text: "Dat email adres wordt al gebruikt!",
+              color: "error",
+              timeout:0
+            });
+          } else {
+            this.$store.dispatch("snackbars/setSnackbar", {
+              text: "Oops er is iets fouts gegaan probeer het opnieuw!",
+              color: "error",
+            });
+          }
         });
     },
   },
@@ -78,6 +112,7 @@ export default {
 <style scoped lang="scss">
 .register {
   font-family: "Open Sans", sans-serif;
+
   display: flex;
   flex-direction: column;
   justify-content: center;

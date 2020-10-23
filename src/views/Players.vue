@@ -1,34 +1,28 @@
 <template>
-  <div class="main-container">
-    <!-- Title and banner -->
-    <div class="title-container">
-      <img class="title-image" src="../assets/logonobackground.png" />
-      <h1 class="title-header">Proost!</h1>
-    </div>
+  <div class="panel">
+    <h1>Proost!</h1>
+    <span>Voeg alle spelers toe.</span>
+    <AddPlayer @addPlayer="addPlayer" />
 
-    <!-- Players container -->
+    <v-card style="text-align: left" class="my-4 rounded-0 players">
+      <PlayerRow
+        v-for="player in allPlayers"
+        :key="player.id"
+        v-bind:player="player"
+        @deletePlayer="deletePlayer"
+      />
+    </v-card>
 
-    <div class="player-container">
-      <AddPlayer @addPlayer="addPlayer" />
-      <div v-for="player in allPlayers" :key="player.id" >
-        <PlayerRow v-bind:player="player" @deletePlayer="deletePlayer" />
-      </div>
-    </div>
-
-    <!-- Play button -->
-    <div class="play-button-container">
-      <button class="play-button" @click="startGame">Het feest kan beginnen!</button>
-    </div>
-
-    <v-btn @click="signOut">Sign out</v-btn>
+    <button class="start-button" @click="startGame">
+      Gaan met die banaan!
+    </button>
   </div>
 </template>
 
 
 
 <script>
-import firebase from 'firebase';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from "vuex";
 import PlayerRow from "../components/PlayerRow";
 import AddPlayer from "../components/AddPlayer";
 
@@ -36,120 +30,71 @@ export default {
   name: "Players",
   components: {
     PlayerRow,
-    AddPlayer
+    AddPlayer,
   },
-  computed: mapGetters(['allPlayers']),
+  computed: mapGetters(["allPlayers"]),
   methods: {
-
-    signOut()
-    {
-      firebase.auth()
-      .signOut()
-      .then( () =>{
-        this.$router.push('login');
-      })
-      .catch((err) => {
-        console.error(err);
-        // Todo sent notification to User.
-      });
-    },
+    ...mapActions({
+      setUser: "user/setUser",
+      setIsAuthenticated: "user/setIsAuthenticated",
+      showSnackbar: "snackbars/setSnackbar",
+    }),
     addPlayer(player) {
       var name = player.name.toLowerCase();
-       if(name.includes("joep"))
-       {
-         player.special = true;
-       }
-       this.$store.commit('addPlayer',player);
-    },
-
-    deletePlayer(id)
-    {
-      this.$store.commit('deletePlayer',id);
-    },
-
-    startGame(){
-      if(this.allPlayers.length < 3)
-      {
-        this.$swal('Je hebt minimaal 3 spelers nodig!');
-        return;
+      if (name.includes("joep")) {
+        player.special = true;
       }
-      else{
+      this.$store.commit("addPlayer", player);
+    },
+
+    deletePlayer(id) {
+      this.$store.commit("deletePlayer", id);
+    },
+
+    startGame() {
+      if (this.allPlayers.length < 3) {
+        this.$swal("Je hebt minimaal 3 spelers nodig!");
+        return;
+      } else {
         // change view to game view
-        this.$router.push({ name: 'Games'});
+        this.$router.push({ name: "games" });
         return;
       }
-
-    }
-  }
+    },
+  },
 };
 </script>
 
 
-<style scoped>
-.title-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+<style scoped lang="scss">
+.players {
+  max-height: 60vh;
+  overflow-y: scroll;
 }
+.start-button {
+  width: 100%;
+  border-radius: 5em;
+  background: rgb(0, 245, 255);
+  background: linear-gradient(
+    45deg,
+    rgba(0, 245, 255, 1) 0%,
+    rgba(151, 86, 235, 1) 53%,
+    rgba(228, 58, 247, 1) 100%
+  );
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 2.5em;
+  // font-family: "Heebo", sans-serif;
+  font-size: 15px;
+  height: 40px;
+  transition: all 0.5s;
+  background-size: 200% 100%;
+  margin-bottom: 0.75em;
 
-.title-image {
-  height: 50px;
-  width: auto;
-  padding-right: 0.5em;
-}
-
-.title-header {
-  color: var(--colorPrimary);
-}
-
-.main-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  max-height: 100vh;
-}
-
-.player-container {
-  padding: 1em;
-  border-radius: 1em;
-  background-color: var(--colorPrimary);
-  overflow-y: auto;
-  width: 90%;
-  min-width: 280px;
-  max-width: 650px;
-  margin: 1em;
-}
-
-.form-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--colorPrimaryDark);
-  border-radius: 1em;
-  padding: 0.5em;
-  margin-bottom: 0.2em;
-}
-
-.play-button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.play-button {
-  border: var(--colorPrimary) 2px solid;
-  background-color: transparent;
-  border-radius: 2em;
-  padding: 1em;
-  margin: 1em;
-  color: var(--colorPrimary);
-  bottom: 0px;
-  transition: 0.5s ease-in-out;
-}
-
-.play-button:hover {
-  background-color: var(--colorPrimary);
-  color: black;
+  &:hover {
+    background-position: 100%;
+  }
 }
 </style>

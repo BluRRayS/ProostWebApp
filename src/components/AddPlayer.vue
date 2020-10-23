@@ -1,52 +1,56 @@
 <template>
-  <div class="form-row">
-    <form style="display:contents" @submit="addPlayer">
-      <input
-        class="player-name-input"
-        type="text"
-        autofocus="true"
-        maxlength="12"
-        placeholder="Speler naam"
-        required
+  <v-form v-model="valid" @submit.prevent="addPlayer" lazy-validation ref="addPlayerForm">
+    <v-row>
+      <v-text-field
         v-model="name"
-      />
-      <input type="submit" value="+" class="player-add-button" />
-    </form>
-  </div>
+        counter="12"
+        required
+        type="text"
+        label="Spelernaam"
+        :rules="[required('spelernaam'), maxLength('spelernaam',12),uniqueName(allPlayers)]"
+      ></v-text-field>
+    </v-row>
+  </v-form>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { v4 as uuidv4 } from "uuid";
+import validation from "@/utils/validation";
+
 
 export default {
   name: "AddPlayer",
   data() {
     return {
-      name: ""
+      name: "",
+      valid: false,
+       ...validation,
     };
   },
+  computed: mapGetters(["allPlayers"]),
   methods: {
-    addPlayer(e) {
-      e.preventDefault();
+    addPlayer() {
+      if(! this.$refs.addPlayerForm.validate()) return;
 
       this.name = checkSpecialNames(this.name);
 
       const newPlayer = {
         id: uuidv4(),
         name: this.name,
-        special: false
+        special: false,
       };
 
       this.$emit("addPlayer", newPlayer);
       this.name = "";
-    }
-  }
+    },
+  },
 };
 
 function checkSpecialNames(name) {
   var checkname = name.toLowerCase();
   if (checkname == "joep") {
-    name+= "🤓"
+    name += "🤓";
   } else if (checkname == "bjorn" || checkname == "björn") {
     name += "🐻";
   } else if (checkname == "jeroen") {
@@ -67,40 +71,5 @@ function checkSpecialNames(name) {
 </script>
 
 <style scoped>
-.player-name-input {
-  background-color: transparent;
-  border: 0px;
-  border-bottom: 1px solid var(--colorSecondary);
-  padding-top: 0.25em;
-  margin-right: 0.5em;
-  margin-bottom: 0.25em;
-  width: 100%;
-}
 
-.player-add-button {
-  background: rgb(233, 30, 99);
-  background: linear-gradient(
-    180deg,
-    rgba(233, 30, 99, 1) 0%,
-    rgba(156, 39, 176, 1) 100%
-  );
-  border: none;
-  border-radius: 0.5em;
-  color: white;
-  padding: 1em;
-  height: 40px;
-  width: 43px;
-  font-size: large;
-  font-weight: 400;
-  padding: 0px;
-  transition: 0.5s ease-in-out;
-}
-
-.player-add-button:hover {
-  transform: scale(1.1);
-}
-
-.player-add-button:hover {
-  scale: 1.1;
-}
 </style>

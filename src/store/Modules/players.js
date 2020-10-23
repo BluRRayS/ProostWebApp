@@ -15,6 +15,7 @@ const state = {
             special: false
         }
     ]
+    // players: []
 };
 
 const getters = {
