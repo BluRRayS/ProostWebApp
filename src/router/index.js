@@ -14,8 +14,7 @@ import DrunkenPirates from '../views/DrunkenPirates.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
-    {
+const routes = [{
         path: '/',
         component: Players,
         meta: {
@@ -61,10 +60,10 @@ const routes = [
         }
     },
     {
-        path:'/account',
+        path: '/account',
         name: 'account',
         component: Account,
-        meta:{
+        meta: {
             requiresAuth: true
         }
     },
@@ -91,7 +90,7 @@ const routes = [
         name: "Half4",
         component: Half4Game,
         beforeEnter: checkPlayers,
-         meta: {
+        meta: {
             requiresAuth: true
         }
     }
@@ -107,7 +106,7 @@ router.beforeEach((to, from, next) => {
     const isAuthenticated = firebase.auth().currentUser;
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-    if(requiresAuth && !isAuthenticated) next('/login');
+    if (requiresAuth && !isAuthenticated) next('/login');
     else next();
 });
 

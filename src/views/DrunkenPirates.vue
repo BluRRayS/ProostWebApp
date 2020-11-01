@@ -1,11 +1,38 @@
 <template>
-  <div><h1 @click="nextItem">{{test}}</h1></div>
+  <div id="game" class="game">
+    <v-progress-circular
+      indeterminate
+      :size="50"
+      color="primary"
+      v-if="!loaded"
+    ></v-progress-circular>
+
+    <div v-if="loaded">
+      <h1 @click="nextItem">{{displayValue}}</h1>
+    </div>
+  </div>
 </template>
 
 <script>
 import firebase from "firebase";
 import playerStore from "../store/Modules/players";
 import gameSettingStore from "../store/Modules/gameSettings";
+const colors = [
+  "#d32f2f",
+  "#c2185b",
+  "#7b1fa2",
+  "#512da8",
+  "#303f9f",
+  "#1976d2",
+  "#005b9f",
+  "#006978",
+  "#00796b",
+  "#00600f",
+  "#bc5100",
+  "#c43e00",
+  "#ac1900",
+  "#3e2723",
+];
 
 export default {
   name: "DrunkenPirates",
@@ -13,15 +40,32 @@ export default {
     return {
       db: null,
       gameItems: [],
-      test: "Heelloo",
-      loaded: false
+      displayValue: "",
+      loaded: false,
+      index: 0
     };
   },
-  methods:{
-      nextItem(){
-          if(!this.loaded) return;
-          this.test = PrepareGameItem(this.gameItems[0].value);
+  methods: {
+    nextItem() {
+      if (!this.loaded) return;
+      
+      if(this.index>this.gameItems.length) {
+        this.index = 0;
       }
+      this.displayValue = PrepareGameItem(this.gameItems[this.index].value);
+      setRandomBackgroundColor();
+      this.index++;
+    },
+    previousItem(){
+      if (!this.loaded) return;
+       
+      if(this.index<0) {
+        this.index = 0;
+      }
+      this.displayValue = PrepareGameItem(this.gameItems[this.index].value);
+      setRandomBackgroundColor();
+      this.index--;
+    }
   },
   created() {
     this.db = firebase.firestore();
@@ -48,12 +92,20 @@ export default {
           this.gameItems.push(gameObject);
         });
         this.gameItems = shuffle(this.gameItems);
-        
+        console.info(this.gameItems);
+        this.loaded = true;
+        this.nextItem();
       });
-    console.info(this.gameItems);
-    this.loaded = true;
+  },
+  mounted() {
+    setRandomBackgroundColor();
   },
 };
+
+function setRandomBackgroundColor() {
+  document.getElementById("game").style.backgroundColor =
+    colors[random(0, colors.length)];
+}
 
 function shuffle(array) {
   array.sort(() => Math.random() - 0.5);
@@ -61,7 +113,7 @@ function shuffle(array) {
 }
 
 function PrepareGameItem(value) {
-    console.warn(value)
+  console.log(value);
   // Set players
   var player1 =
     playerStore.state.players[random(0, playerStore.state.players.length)].name;
@@ -69,41 +121,61 @@ function PrepareGameItem(value) {
     playerStore.state.players[random(0, playerStore.state.players.length)].name;
   while (player2 == player1) {
     player2 =
-      playerStore.state.players[random(0, playerStore.state.players.length)].name;
+      playerStore.state.players[random(0, playerStore.state.players.length)]
+        .name;
   }
   value = value.replace("[pl1]", player1);
   value = value.replace("[pl2]", player2);
   // Set drinking type
+  console.log(gameSettingStore.state.settings.drinkTypes);
+
   var AvailabledrinkTypes = gameSettingStore.state.settings.drinkTypes.filter(
     (item) => item.IsUsed
   );
-  var drinkingType = {
-    name: " Ja grapjas je moet wel een drinkformaat aanzetten ",
-    minAmount: 1,
-    maxAmount: 5,
-  };
-  if (
-    AvailabledrinkTypes !== undefined ||
-    AvailabledrinkTypes !== null ||
-    AvailabledrinkTypes.length !== 0
-  ) {
-    drinkingType = AvailabledrinkTypes[random(0, AvailabledrinkTypes.length)];
+  console.log(AvailabledrinkTypes);
+  let drinkingType = {};
+  if (AvailabledrinkTypes === undefined || AvailabledrinkTypes.length == 0) {
+    drinkingType = {
+      name:
+        "adtje, en grapjas vergeet je niet even drinkformaten aan te zetten in de instellingen",
+      minAmount: 1,
+      maxAmount: 5,
+    };
+  } else {
+    var drinkingTypeChance = [];
+    // Add change multipliers to make some drinking multipliers more rare.
+    AvailabledrinkTypes.forEach( drinkType => {
+      console.log(drinkType)
+      for(var i = 0; i < drinkType.chanceMultiplier; i ++)
+      {
+        drinkingTypeChance.push(drinkType);
+      }
+    });
+    drinkingTypeChance = shuffle(drinkingTypeChance);
+    drinkingType = drinkingTypeChance[random(0, drinkingTypeChance.length)];
   }
   value = value.replace("[drinkType]", drinkingType.name);
   // Set drinking value
-  var drinkingValue = random(
-    drinkingType.minAmount,
-    drinkingType.maxAmount
-  );
+  var drinkingValue = random(drinkingType.minAmount, drinkingType.maxAmount);
   value = value.replace("[amount]", drinkingValue);
   // Done
   return value;
 }
 
 function random(min, max) {
-  return Math.floor(Math.random() * (max - min) ) + min;
+  return Math.floor(Math.random() * max) + min;
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.game {
+  height: 100%;
+  text-align: center;
+  color: white;
+  font-family: "Open Sans", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 </style>

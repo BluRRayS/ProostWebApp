@@ -2,7 +2,7 @@
   <v-list-item>
     <v-list-item-action>
       <v-switch
-        @click="SetUseDrinkType"
+        @change="setUseDrinkType"
         v-model="drinkType.IsUsed"
         color="indigo"
       ></v-switch>
@@ -18,7 +18,11 @@
         required
         label="min"
         @change="setMinAmount"
-        :rules="[required('min'), largerThanZero('min')]"
+        :rules="[
+          required('min'),
+          largerThanZero('min'),
+          smallerThanValue('min', 'max', drinkType.maxAmount),
+        ]"
       ></v-text-field>
       <v-text-field
         v-model="drinkType.maxAmount"
@@ -52,20 +56,20 @@ export default {
     };
   },
   methods: {
-    SetUseDrinkType(e) {
+    setUseDrinkType(e) {
       this.$store.commit("setUseDrinkType", {
         id: this.id,
-        IsUsed: e.target.value,
+        IsUsed: e,
       });
     },
-    SetMinAmount(e) {
+    setMinAmount(e) {
       if (!this.valid) return;
       this.$store.commit("setMinAmount", {
         id: this.id,
         minAmount: e.target.value,
       });
     },
-    SetMaxAmount(e) {
+    setMaxAmount(e) {
       if (!this.valid) return;
       this.$store.commit("setMaxAmount", {
         id: this.id,

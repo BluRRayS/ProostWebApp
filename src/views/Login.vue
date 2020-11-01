@@ -93,6 +93,7 @@ export default {
           this.showSnackbar({ text: "Succesvol ingelogd!" });
           this.setUser(res.user);
           this.setIsAuthenticated(true);
+          this.$store.commit("addPlayer",{name: res.user.displayName});
           this.$router.replace("players");
         })
         .catch((error) => {

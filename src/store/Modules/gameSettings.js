@@ -1,13 +1,12 @@
-
 const state = {
     settings: {
-        drinkTypes: [
-            {
+        drinkTypes: [{
                 id: 0,
                 name: "slok",
                 minAmount: 1,
                 maxAmount: 5,
                 icon: "mdi-beer",
+                chanceMultiplier: 6,
                 IsUsed: true
             },
             {
@@ -16,6 +15,7 @@ const state = {
                 minAmount: 1,
                 maxAmount: 2,
                 icon: "mdi-glass-mug-variant",
+                chanceMultiplier: 2,
                 IsUsed: true
             },
             {
@@ -24,6 +24,7 @@ const state = {
                 minAmount: 1,
                 maxAmount: 1,
                 icon: "mdi-keg",
+                chanceMultiplier: 1,
                 IsUsed: true
             },
             {
@@ -32,6 +33,7 @@ const state = {
                 minAmount: 1,
                 maxAmount: 5,
                 icon: "mdi-glass-cocktail",
+                chanceMultiplier: 2,
                 IsUsed: true
             },
         ],
@@ -42,19 +44,18 @@ const getters = {
     GetDrinkTypes: (state) => state.settings.drinkTypes,
 };
 
-const actions = {
-};
+const actions = {};
 
 const mutations = {
     setUseDrinkType(state, payload) {
         const item = state.settings.drinkTypes.find(x => x.id === payload.id);
         Object.assign(item, { IsUsed: payload.IsUsed })
     },
-    setMinAmount(state, payload){
+    setMinAmount(state, payload) {
         const item = state.settings.drinkTypes.find(x => x.id === payload.id);
         Object.assign(item, { minAmount: payload.minAmount })
     },
-    setMaxAmount(state, payload){
+    setMaxAmount(state, payload) {
         const item = state.settings.drinkTypes.find(x => x.id === payload.id);
         Object.assign(item, { maxAmount: payload.maxAmount })
     },

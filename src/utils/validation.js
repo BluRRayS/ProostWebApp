@@ -10,14 +10,17 @@ let maxLength = (propertyType, maxLength) => {
 let emailFormat = () => {
     return v => v && /.+@.+/.test(v) || "Moet een email adres zijn!"
 }
-let uniqueName = ( items) => {
-    return v =>  v && !items.some(item => item.name === v ) || `${v} bestaat al!`
+let uniqueName = (items) => {
+    return v => v && !items.some(item => item.name === v) || `${v} bestaat al!`
 }
 let largerThanZero = (propertyType) => {
     return v => v && parseInt(v) > 0 || `${propertyType} moet groter zijn dan 0`
 }
 let largerThanValue = (propertyType, otherPropertyType, value) => {
     return v => v && parseInt(v) > value || `${propertyType} moet groter zijn dan ${otherPropertyType}`
+}
+let smallerThanValue = (propertyType, otherPropertyType, value) => {
+    return v => v && parseInt(v) < value || `${propertyType} moet kleiner zijn dan ${otherPropertyType}`
 }
 export default {
     required,
@@ -26,5 +29,6 @@ export default {
     emailFormat,
     uniqueName,
     largerThanZero,
-    largerThanValue
+    largerThanValue,
+    smallerThanValue
 }
