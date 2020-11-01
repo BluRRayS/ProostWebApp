@@ -21,7 +21,7 @@
       </v-snackbar>
       <router-view></router-view>
 
-      <v-footer app padless>
+      <v-footer app padless v-if="!['half4', 'drunkenPirates'].includes($route.name)">
         <Nav v-if="isAuthenticated" />
       </v-footer>
     </v-app>

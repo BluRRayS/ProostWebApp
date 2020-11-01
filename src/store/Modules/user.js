@@ -1,7 +1,6 @@
 const state = {
     user: null,
     isAuthenticated: false,
-    showBottomBar: true
 };
 
 const mutations = {
@@ -11,9 +10,9 @@ const mutations = {
     SET_ISAUTHENTICATED(state, isAuthenticated) {
         state.isAuthenticated = isAuthenticated;
     },
-    setShowBottomBar(state, payload) {
-        state.showBottomBar = payload;
-    },
+    SET_DISPLAYNAME(state, displayName){
+        state.user.displayName = displayName;
+    }
 };
 
 const getters = {
@@ -24,7 +23,7 @@ const getters = {
         initials += state.user.displayName.slice(-1);
         return initials
     },
-    getShowBottomBar: (state) => state.showBottomBar
+    getDisplayName: (state) => state.user.displayName,
 };
 
 const actions = {
@@ -37,6 +36,9 @@ const actions = {
     autoSignIn({ commit }, payload) {
         commit('SET_USER', payload);
         commit('SET_ISAUTHENTICATED', true);
+    },
+    setDisplayName({commit},payload){
+        commit('SET_DISPLAYNAME',payload);
     }
 };
 

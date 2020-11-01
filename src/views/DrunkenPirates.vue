@@ -1,5 +1,6 @@
 <template>
   <div id="game" class="game">
+    <v-btn fab dark absolute style="top:10px; left:10px;" @click="stopGame"><v-icon>mdi-arrow-left</v-icon></v-btn>
     <v-progress-circular
       indeterminate
       :size="50"
@@ -8,7 +9,13 @@
     ></v-progress-circular>
 
     <div v-if="loaded">
-      <h1 @click="nextItem">{{displayValue}}</h1>
+      <v-row style="margin:0" class="align-end flex-column">
+        <v-btn @click="previousItem" fab class="mr-4">
+          <v-icon>mdi-comment-arrow-left</v-icon>
+        </v-btn>
+      </v-row>
+      <h1 class="game-text pa-6">{{ displayValue }}</h1>
+      <v-btn  @click="nextItem" rounded>Volgende</v-btn>
     </div>
   </div>
 </template>
@@ -42,29 +49,43 @@ export default {
       gameItems: [],
       displayValue: "",
       loaded: false,
-      index: 0
+      index: 0,
+      allQuestionsPlayed: 0
     };
   },
   methods: {
     nextItem() {
       if (!this.loaded) return;
-      
-      if(this.index>this.gameItems.length) {
+      if (this.index >= this.gameItems.length) {
         this.index = 0;
+        if(this.allQuestionsPlayed === 0)
+        {
+          this.$swal(
+            `Je hebt alle vragen gespeeld! Als je doorspeelt worden vragen herhaald.`
+          );
+           this.allQuestionsPlayed = 1;
+           this.gameItems = shuffle(this.gameItems);
+        }   
       }
+      console.log(this.gameItems);
+      console.log(this.index);
       this.displayValue = PrepareGameItem(this.gameItems[this.index].value);
       setRandomBackgroundColor();
       this.index++;
     },
-    previousItem(){
+    previousItem() {
+      this.index--;
       if (!this.loaded) return;
-       
-      if(this.index<0) {
+      if (this.index <= 0) {
         this.index = 0;
       }
+      console.log(this.gameItems);
+      console.log(this.index);
       this.displayValue = PrepareGameItem(this.gameItems[this.index].value);
       setRandomBackgroundColor();
-      this.index--;
+    },
+    stopGame(){
+      this.$router.push('games')
     }
   },
   created() {
@@ -124,8 +145,8 @@ function PrepareGameItem(value) {
       playerStore.state.players[random(0, playerStore.state.players.length)]
         .name;
   }
-  value = value.replace("[pl1]", player1);
-  value = value.replace("[pl2]", player2);
+  value = value.replaceAll("[pl1]", player1);
+  value = value.replaceAll("[pl2]", player2);
   // Set drinking type
   console.log(gameSettingStore.state.settings.drinkTypes);
 
@@ -144,10 +165,9 @@ function PrepareGameItem(value) {
   } else {
     var drinkingTypeChance = [];
     // Add change multipliers to make some drinking multipliers more rare.
-    AvailabledrinkTypes.forEach( drinkType => {
-      console.log(drinkType)
-      for(var i = 0; i < drinkType.chanceMultiplier; i ++)
-      {
+    AvailabledrinkTypes.forEach((drinkType) => {
+      console.log(drinkType);
+      for (var i = 0; i < drinkType.chanceMultiplier; i++) {
         drinkingTypeChance.push(drinkType);
       }
     });
@@ -177,5 +197,12 @@ function random(min, max) {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .game-text {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    max-width: 800px;
+  }
 }
 </style>

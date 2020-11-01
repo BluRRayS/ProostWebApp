@@ -4,7 +4,7 @@ const state = {
                 id: 0,
                 name: "slok",
                 minAmount: 1,
-                maxAmount: 5,
+                maxAmount: 8,
                 icon: "mdi-beer",
                 chanceMultiplier: 6,
                 IsUsed: true
@@ -31,7 +31,7 @@ const state = {
                 id: 3,
                 name: "shotje",
                 minAmount: 1,
-                maxAmount: 5,
+                maxAmount: 2,
                 icon: "mdi-glass-cocktail",
                 chanceMultiplier: 2,
                 IsUsed: true
