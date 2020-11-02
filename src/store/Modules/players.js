@@ -1,21 +1,21 @@
 const state = {
-    players: [{
-            id: 1,
-            name: "Joep",
-            special: true
-        },
-        {
-            id: 2,
-            name: "Stijn",
-            special: false
-        },
-        {
-            id: 3,
-            name: "Jeroen",
-            special: false
-        }
-    ]
-    // players: []
+    // players: [{
+    //         id: 1,
+    //         name: "Joep",
+    //         special: true
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Stijn",
+    //         special: false
+    //     },
+    //     {
+    //         id: 3,
+    //         name: "Jeroen",
+    //         special: false
+    //     }
+    // ]
+     players: []
 };
 
 const getters = {

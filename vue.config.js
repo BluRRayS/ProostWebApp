@@ -35,11 +35,11 @@ module.exports = {
       "importWorkboxFrom": "local",
       "navigateFallback": "shell.html",
       "navigateFallbackWhitelist": [
-        {}
       ]
     }
   },
+
   "transpileDependencies": [
     "vuetify"
-  ]
+  ],
 }
