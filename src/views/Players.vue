@@ -52,14 +52,9 @@ export default {
     },
 
     startGame() {
-      if (this.allPlayers.length < 3) {
-        this.$swal("Je hebt minimaal 3 spelers nodig!");
-        return;
-      } else {
-        // change view to game view
-        this.$router.push({ name: "games" });
-        return;
-      }
+      // change view to game view
+      this.$router.push({ name: "games" });
+      return;
     },
   },
 };
