@@ -21,7 +21,7 @@
         :rules="[
           required('min'),
           largerThanZero('min'),
-          smallerThanValue('min', 'max', drinkType.maxAmount),
+          smallerOrEqualThanValue('min', 'max', drinkType.maxAmount),
         ]"
       ></v-text-field>
       <v-text-field
@@ -32,7 +32,7 @@
         @change="setMaxAmount"
         :rules="[
           required('max'),
-          largerThanValue('max', 'min', drinkType.minAmount),
+          largerOrEqualThanValue('max', 'min', drinkType.minAmount),
         ]"
       ></v-text-field>
     </v-form>

@@ -16,11 +16,11 @@ let uniqueName = (items) => {
 let largerThanZero = (propertyType) => {
     return v => v && parseInt(v) > 0 || `${propertyType} moet groter zijn dan 0`
 }
-let largerThanValue = (propertyType, otherPropertyType, value) => {
-    return v => v && parseInt(v) > value || `${propertyType} moet groter zijn dan ${otherPropertyType}`
+let largerOrEqualThanValue = (propertyType, otherPropertyType, value) => {
+    return v => v && parseInt(v) >= value || `${propertyType} moet groter zijn dan ${otherPropertyType}`
 }
-let smallerThanValue = (propertyType, otherPropertyType, value) => {
-    return v => v && parseInt(v) < value || `${propertyType} moet kleiner zijn dan ${otherPropertyType}`
+let smallerOrEqualThanValue = (propertyType, otherPropertyType, value) => {
+    return v => v && parseInt(v) <= value || `${propertyType} moet kleiner zijn dan ${otherPropertyType}`
 }
 export default {
     required,
@@ -29,6 +29,6 @@ export default {
     emailFormat,
     uniqueName,
     largerThanZero,
-    largerThanValue,
-    smallerThanValue
+    largerOrEqualThanValue,
+    smallerOrEqualThanValue
 }
