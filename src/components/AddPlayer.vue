@@ -65,6 +65,8 @@ function checkSpecialNames(name) {
     name += "😎";
   } else if (checkname == "chelsey") {
     name += "💕";
+  } else if (checkname == "casper"){
+    name += "👻";
   }
   return name;
 }
