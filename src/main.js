@@ -9,7 +9,6 @@ import './registerServiceWorker'
 import vuetify from './plugins/vuetify';
 import * as firebase from 'firebase';
 
-
 const options = {
   confirmButtonColor: '#3F51B5',
   cancelButtonColor: '#ff7674',

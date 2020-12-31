@@ -16,7 +16,7 @@ export default {
         {
           icon: "mdi-account-multiple",
           text: "Spelers",
-          route: "/player",
+          route: "/players",
         },
         {
           icon: "mdi-glass-mug-variant",

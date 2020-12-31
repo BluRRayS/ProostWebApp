@@ -19,7 +19,8 @@
     "vue-router": "^3.4.8",
     "vue-sweetalert2": "^3.0.8",
     "vuetify": "^2.3.16",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "vuex-persistedstate": "^4.0.0-beta.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

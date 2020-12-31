@@ -22,7 +22,6 @@
 
 <script>
 import firebase from "firebase";
-import playerStore from "../store/Modules/players";
 import gameSettingStore from "../store/Modules/gameSettings";
 const colors = [
   "#d32f2f",
@@ -135,14 +134,17 @@ function shuffle(array) {
 
 function PrepareGameItem(value) {
   console.log(value);
+  var state = JSON.parse(localStorage.getItem("vuex"));
+  var players = state.players.players;
+  console.log(players);
   // Set players
   var player1 =
-    playerStore.state.players[random(0, playerStore.state.players.length)].name;
+    players[random(0, players.length)].name;
   var player2 =
-    playerStore.state.players[random(0, playerStore.state.players.length)].name;
+    players[random(0, players.length)].name;
   while (player2 == player1) {
     player2 =
-      playerStore.state.players[random(0, playerStore.state.players.length)]
+      players[random(0, players.length)]
         .name;
   }
   value = value.replaceAll("[pl1]", player1);

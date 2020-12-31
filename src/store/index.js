@@ -5,6 +5,7 @@ import games from './Modules/games';
 import snackbars from './Modules/snackbar'
 import user from './Modules/user'
 import gameSettings from './Modules/gameSettings'
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
@@ -15,5 +16,9 @@ export default new Vuex.Store({
        snackbars: snackbars,
        user:user,
        gameSettings: gameSettings
-    }
-})
+    },
+    plugins: [createPersistedState({
+        paths: ['players'],
+        fetchBeforeUse: true
+    })],
+});

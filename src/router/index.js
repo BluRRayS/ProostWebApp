@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 import Players from '../views/Players.vue';
 import Games from '../views/Games.vue';
 import PiccoloGame from '../views/PiccoloGame.vue';
-import players from '../store/Modules/players';
 import Half4Game from '../views/Half4Game.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
@@ -112,8 +111,9 @@ router.beforeEach((to, from, next) => {
 
 
 function checkPlayers(to, from, next) {
-    if (players.state.players.length < 3) {
-        router.push({ name: 'Players' });
+    var state = JSON.parse(localStorage.getItem("vuex"));
+    if (state.players.players.length < 3) {
+        router.push({ name: 'players' });
     } else {
         next()
     }

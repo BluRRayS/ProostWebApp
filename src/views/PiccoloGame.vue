@@ -159,6 +159,7 @@ function prepareOrder(order){
 }
 
 function prepareInteraction(interaction){
+  console.log("Hello!");
   console.log(store);
   var player1 = store.state.players[random(0,store.state.players.length)].name;
   var player2 = store.state.players[random(0,store.state.players.length)].name;
